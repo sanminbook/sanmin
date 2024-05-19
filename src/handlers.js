@@ -9,12 +9,12 @@ export const onText=(t,ctx)=>{
 }
 
 export const prolog=(content,ctx)=>{  
+    content=content.replace(/<p pagenum="\d+"><\/p>/g,''); //disturb note, remove it 阿蘭那也是比丘修習的場所和寺院的總稱 in main text
     content=content.replace(/<cccii code="([a-f\d]+)" *\/>/g,(m,code)=>{
         const cccii=parseInt(code,16);
         const at=bsearchNumber(ctx.cccii,cccii);
         if (~at) {
             const s=String.fromCharCode(ctx.unicode[at]);
-            console.log(s);
             return s;
         } else {
             console.log('cannot map cccii to',code)
