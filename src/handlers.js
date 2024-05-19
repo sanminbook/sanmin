@@ -17,10 +17,9 @@ export const prolog=(content,ctx)=>{
             console.log(s);
             return s;
         } else {
-            console.log('undefined cccii',code)
+            console.log('cannot map cccii to',code)
             return '^cccii'+code;
         }
-        
     })
     content=content.replace(/<p><\/p><\/cnote>/g,'</cnote>')  ;//useless. disturb paragraph marker
 
