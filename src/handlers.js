@@ -1,3 +1,5 @@
+import { bsearchNumber } from "ptk/nodebundle.cjs";
+
 export const onText=(t,ctx)=>{
     if (ctx.innote){
         ctx.notetext+=t.replace(/\n/g,'');
@@ -7,6 +9,19 @@ export const onText=(t,ctx)=>{
 }
 
 export const prolog=(content,ctx)=>{  
+    content=content.replace(/<cccii code="([a-f\d]+)" *\/>/g,(m,code)=>{
+        const cccii=parseInt(code,16);
+        const at=bsearchNumber(ctx.cccii,cccii);
+        if (~at) {
+            const s=String.fromCharCode(ctx.unicode[at]);
+            console.log(s);
+            return s;
+        } else {
+            console.log('undefined cccii',code)
+            return '^cccii'+code;
+        }
+        
+    })
     content=content.replace(/<p><\/p><\/cnote>/g,'</cnote>')  ;//useless. disturb paragraph marker
 
     content= content.replace(/<cnote name="no" noteno="1"><\/cnote><font name="note">([^>]+?)<\/font>/g,

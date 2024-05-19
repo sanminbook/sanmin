@@ -7,7 +7,9 @@ raw.sort((a,b)=>a[0]-b[0])
 const cccii=raw.map(it=>it[0]);
 const unicode=raw.map(it=>it[1]);
 
-const ctx={ele:{},nested:[],fn:'',t:'',notes:[],totalnotecount:0,notecount:0,notetext:'',innote:false,fn:''}
+const ctx={ele:{},nested:[],fn:'',t:'',
+cccii,unicode,
+notes:[],totalnotecount:0,notecount:0,notetext:'',innote:false,fn:''}
 ctx.fn=process.argv[2]||'92620diamondsutra.xml';
 const infile=readTextContent('gjxy/'+(ctx.fn));
 const tree=DOMFromString(prolog(infile,ctx));
