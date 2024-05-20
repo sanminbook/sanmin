@@ -37,19 +37,19 @@ export const prolog=(content,ctx)=>{
 }
 export const epilog=(content,ctx)=>{
     content=content.replace(/【注　釋】\n?/g,'')
-    content=content.replace(/【題　解】\n?/g,'^explain')
-    content=content.replace(/【章　旨】\n?/g,'^purpose')
-    content=content.replace(/【語　譯】\n?/g,'^baihua')
-    content=content.replace(/\^pg(\d+)\n/g,'^pg$1')
+    content=content.replace(/【題　解】\n?/g,'^seg4');//not use
+    content=content.replace(/【章　旨】\n?/g,'^seg1')
+    content=content.replace(/【語　譯】\n?/g,'^seg2')
+    content=content.replace(/\^pg(\d+)\n/g,'');//'^pg$1')  //先不處理原書頁碼
     if (ctx.fn=='92620diamondsutra.xml') {
         const at=content.indexOf('附　錄');
         if (~at) content=content.slice(0,at)
     }
-    return content;
+    return content.replace(/\n+/g,'\n');
 }
 export const onOpen={
     freeze:(tag,ctx)=>{
-        if (!tag.innote) ctx.t+='^pg'+tag.attrs.pagenum;
+        //if (!tag.innote) ctx.t+='^pg'+tag.attrs.pagenum; //先不處理原書頁碼
     },
     note:(tag,ctx)=>{ //convert by prolog() , cnote with name="no"
         if (tag.attrs.noteno=='1') {
@@ -62,7 +62,7 @@ export const onOpen={
         if (!tag.innote) {
             ctx.t+='\n'
             if (tag.attrs.name=='para11') {//經文
-                ctx.t+='^jin'
+                ctx.t+='^seg0'
             }
         }
     },

@@ -1,5 +1,6 @@
-import {nodefs,readTextLines,readTextContent,DOMFromString, walkDOM, writeChanged} from 'ptk/nodebundle.cjs'
+import {nodefs,readTextLines,readTextContent,DOMFromString, walkDOM, writeChanged, } from 'ptk/nodebundle.cjs'
 import {prolog,epilog,onOpen,onClose,onText} from './src/handlers.js'
+import {migratelinebreak} from './src/migratecrlf.js'
 await nodefs;
 
 const raw = readTextLines('cccii2unicode.txt').map(it=>it.split(' ').map(it2=>parseInt(it2,16)))
@@ -16,8 +17,31 @@ const tree=DOMFromString(prolog(infile,ctx));
 
 walkDOM(tree,ctx,onOpen,onClose,onText);
 
-const out=epilog(ctx.t,ctx);
-const out2=ctx.notes.join('\n');
-writeChanged('off/'+ctx.fn.replace(/\.xml/ig,'.off'), out);
-writeChanged('off/'+ctx.fn.replace(/\.xml/ig,'.tsv'), out2);
+const out=epilog(ctx.t,ctx).split(/(\^seg\d+)/);
 
+const out2=ctx.notes.join('\n');
+//writeChanged('off/'+ctx.fn.replace(/\.xml/ig,'.off'), out);
+
+let seg='unknown',group=0;
+const segments={};
+for (let i=0;i<out.length;i++) {
+    if (out[i].startsWith('^seg')) {
+        seg=out[i].slice(1);
+        if (out[i].startsWith('^seg0')) {  //題解只有幾個，先不處理
+            group++;
+        }
+    }
+    if (!segments[seg]) segments[seg]='';
+    segments[seg]+=out[i].replace(/\^seg\d+/g,'\n^g'+group);
+}
+
+writeChanged('off/'+ctx.fn.replace(/\.xml/ig,'.tsv'), out2);
+for (let s in segments) {
+    let text=segments[s].replace(/\n+/g,'\n');
+
+    if (s=='seg0') {//經文引用 ck 
+        const vcpp=readTextContent('../yonglezang/ylz-prjn.offtext/vcpp.off');
+        text=migratelinebreak(text,vcpp);
+    }
+    writeChanged('off/'+ctx.fn.replace(/\.xml/ig,'-'+s+'.off'), text);
+}
