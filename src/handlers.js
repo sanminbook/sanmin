@@ -45,6 +45,8 @@ export const epilog=(content,ctx)=>{
         const at=content.indexOf('附　錄');
         if (~at) content=content.slice(0,at)
     }
+    
+
     return content.replace(/\n+/g,'\n');
 }
 export const onOpen={
@@ -73,13 +75,32 @@ export const onOpen={
         }
         ctx.notecount++;
         
-        ctx.t+='^f'+(ctx.totalnotecount+ctx.notecount);
+        ctx.t+='^f'+(ctx.totalnotecount+ctx.notecount); //目前還不知道 詞長度
+        
     }
 };
 export const onClose={
     'p':(tag,ctx)=>{
         if (ctx.innote){
-            ctx.notes.push( (ctx.totalnotecount+ctx.notecount)+'\t'+ctx.notetext);
+            const at=ctx.notetext.indexOf('　');
+            if (!~at) throw "not a note"
+            const label=ctx.notetext.slice(0,at);
+            const note=ctx.notetext.slice(at+1);
+            ctx.notes.push( (ctx.totalnotecount+ctx.notecount)+'\t'+label+'\t'+note);
+            
+            //replace ^f11 with ^t(label)
+            let at2=ctx.t.indexOf(label+'^f');
+            if (~at2) {
+                const m=ctx.t.slice(at2+label.length+2).match(/(\d+)/);
+                if (m){
+                    const label2=ctx.t.slice(at2,at2+label.length);
+                    ctx.t= ctx.t.slice(0,at2)+'^t('+label2+')'+ctx.t.slice(at2+label.length+2+m[1].length);
+                    //console.log(ctx.t)
+                } else {
+                    console.log('not found',ctx.t.slice(at2))
+                }
+            }
+
             ctx.innote=false;
             ctx.notetext='';
         }

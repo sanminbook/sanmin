@@ -42,6 +42,10 @@ for (let s in segments) {
     if (s=='seg0') {//經文引用 ck 
         const vcpp=readTextContent('../yonglezang/ylz-prjn.offtext/vcpp.off');
         text=migratelinebreak(text,vcpp);
+
+        //deal with ^t
+        text=text.replace(/\^t\(\n/g,'\n^t(');
+
     }
-    writeChanged('off/'+ctx.fn.replace(/\.xml/ig,'-'+s+'.off'), text);
+    writeChanged('off/'+ctx.fn.replace(/\.xml/ig,'-'+s+'.txt'), text);
 }

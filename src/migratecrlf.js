@@ -13,5 +13,7 @@ export const migratelinebreak=(sourcetext,guidetext)=>{
             out+=d[i].value; //共有
         }
     }
+
+    
     return out
 }

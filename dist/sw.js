@@ -15,12 +15,11 @@
             'sanmin.png',
             'sanmin512.png',
             'sanmin.manifest',
-            'offline.html',
-            'ProvidentPaliSegoe.otf'
-        ]);
+            'offline.html'
+          ]);
     };
 
-    self.addEventListener('install', function (event) {
+  self.addEventListener('install', function (event) {
         event.waitUntil(updateStaticCache());
     });
 
@@ -59,16 +58,15 @@
         
         if (~accept.indexOf('text/') || request.url.endsWith('.js')|| request.url.endsWith('.css')) { //html, css , js, try to fetch updates
             // Fix for Chrome bug: https://code.google.com/p/chromium/issues/detail?id=573937
-          if (request.mode != 'navigate') {
-              const url=(~request.url.indexOf('index.js')&& navigator.onLine&&request.url.indexOf('?')==-1)?request.url+'?'+Math.random():request.url;
-               var request = new Request(url, {//force update
-                  method: 'GET',
-                  headers: request.headers,
-                  mode: request.mode,
-                  credentials: request.credentials,
-                  redirect: request.redirect
-              });
-          }
+            if (request.mode != 'navigate') {
+                request = new Request(request.url, {
+                    method: 'GET',
+                    headers: request.headers,
+                    mode: request.mode,
+                    credentials: request.credentials,
+                    redirect: request.redirect
+                });
+            }
             event.respondWith(
                 fetch(request) //try online first
                     .then(function (response) {
@@ -77,7 +75,6 @@
                         if (response.ok) {
                             caches.open(CacheName)
                             .then(function (cache) {
-                            	request.url=request.url.replace(/\?.+/,'');
                                 cache.put(request, copy);
                             });
                         }
