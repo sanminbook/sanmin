@@ -1,4 +1,4 @@
-import { bsearchNumber } from "ptk/nodebundle.cjs";
+import { bsearchNumber, toChineseNumber } from "ptk/nodebundle.cjs";
 
 export const onText=(t,ctx)=>{
     if (ctx.innote){
@@ -76,6 +76,14 @@ export const onOpen={
         ctx.notecount++;
         
         ctx.t+='^f'+(ctx.totalnotecount+ctx.notecount); //目前還不知道 詞長度
+        
+    },
+    numsym:(tag,ctx)=>{
+        if (ctx.attrs.name=='N303') {
+            return '^ref'+tag.attrs.numcode;
+        } else if (ctx.attrs.name=='N303') {
+            ctx.t+=toChineseNumber(parseInt(tag.attrs.numcode));
+        }
         
     }
 };

@@ -2,7 +2,7 @@ export * from 'accelon23/src/store.js';
 import {ACC23 as _ACC23} from 'accelon23/src/appconst.js'
 
 _ACC23.CacheName='v1::sanmin',
-_ACC23.AppVer='24.5.22';
+_ACC23.AppVer='24.5.23';
 _ACC23.AppName='sanmin'
 _ACC23.AppTitle='三民古籍'
 _ACC23.allptks=['sanmin','sanmin-bh','sanmin-ex'];
