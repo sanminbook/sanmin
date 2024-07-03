@@ -20,7 +20,7 @@ walkDOM(tree,ctx,onOpen,onClose,onText);
 const out=epilog(ctx.t,ctx).split(/(\^seg\d+)/);
 
 const out2=ctx.notes.join('\n');
-//writeChanged('off/'+ctx.fn.replace(/\.xml/ig,'.off'), out);
+writeChanged('off/'+ctx.fn.replace(/\.xml/ig,'-ori.tsv'), out2,true);
 
 let seg='unknown',group=0;
 const segments={};
