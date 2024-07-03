@@ -79,9 +79,9 @@ export const onOpen={
         
     },
     numsym:(tag,ctx)=>{
-        if (ctx.attrs.name=='N303') {
+        if (tag.attrs.name=='N303') {
             return '^ref'+tag.attrs.numcode;
-        } else if (ctx.attrs.name=='N303') {
+        } else if (tag.attrs.name=='N303') {
             ctx.t+=toChineseNumber(parseInt(tag.attrs.numcode));
         }
         
